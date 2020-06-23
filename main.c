@@ -9,7 +9,7 @@
 #include <errno.h>
 
 #include "csv_reader.h"
-#include "csv_record.h"
+#include "csv.h"
 #include "defs.h"
 
 #define ERR(...) do { \

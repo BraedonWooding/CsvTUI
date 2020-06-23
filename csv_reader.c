@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "csv_record.h"
+#include "csv.h"
 #include "defs.h"
 #include "table.h"
 

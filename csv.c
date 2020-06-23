@@ -6,7 +6,7 @@
 
 #include "defs.h"
 #include "csv_reader.h"
-#include "csv_record.h"
+#include "csv.h"
 #include "table.h"
 #include "color.h"
 
@@ -69,7 +69,7 @@ static void print_record(CsvRecord *record, void *data) {
     text_set(SET_RESET, FG_WHITE, BG_BLACK);
     // each col is going to be black + white and have a length of 15
     for (CsvRecordCol *col = record->cols; col < record->cols + record->num_cols; col++) {
-        
+
     }
     printf("\n");
     CLEAR_MODIFIERS();
