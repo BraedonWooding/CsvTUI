@@ -57,11 +57,11 @@ int main(int argc, char *argv[]) {
             // if flags contains either records or lines
             if (flags & CSV_FLAGS_SKIP_EMPTY_RECORDS) ERR("Duplicate --skip-empty\n");
 
-            char *arg = strstr(argv[i], '=');
+            char *arg = strstr(argv[i], "=");
             if (!arg || *arg != '=') ERR("Missing argument for --skip-empty\n");
-            if (!strcmpy(arg + 1, "LINES")) {
+            if (!strcmp(arg + 1, "LINES")) {
                 flags |= CSV_FLAGS_SKIP_EMPTY_LINES;
-            } else if (!strcmpy(arg + 1, "RECORDS")) {
+            } else if (!strcmp(arg + 1, "RECORDS")) {
                 flags |= CSV_FLAGS_SKIP_EMPTY_LINES;
             } else {
                 ERR("Invalid argument %s\n", arg + 1);
@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
         } else if (!strncmp(argv[i], "--force-type", strlen("--force-type"))) {
             if (flags & CSV_FLAGS_ALL_STRINGS) ERR("Duplicate --force-type\n");
 
-            char *arg = strstr(argv[i], '=');
+            char *arg = strstr(argv[i], "=");
             if (!arg || *arg != '=') ERR("Missing argument for --force-type\n");
-            if (!strcmpy(arg + 1, "STRING")) {
+            if (!strcmp(arg + 1, "STRING")) {
                 flags |= CSV_FLAGS_ALL_STRINGS;
             } else {
                 ERR("Invalid argument %s\n", arg + 1);
@@ -96,10 +96,13 @@ int main(int argc, char *argv[]) {
     Csv *csv = read_out_csv(&reader, !!headers);
     if (!csv) ERR("Failure to read CSV %s", reader.err_buf);
 
-    // TODO: TUI Mode
-    for (;;) {
+    // print it out
+    csv_print(csv);
 
-    }
+    // TODO: TUI Mode
+    // for (;;) {
+
+    // }
 
     return 0;
 }

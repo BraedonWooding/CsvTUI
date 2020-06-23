@@ -55,8 +55,6 @@ enum color_set_t {
 
 #define CLEAR_MODIFIERS() text_set(SET_RESET, FG_DEFAULT, BG_DEFAULT)
 
-inline void text_set(int set, int fg, int bg) {
-    printf("\e[%d;%d;%dm", set, fg, bg);
-}
+void text_set(int set, int fg, int bg);
 
 #endif // COLOR_H

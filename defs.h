@@ -6,6 +6,7 @@
 #define DEFS_H
 
 #include <stddef.h>
+#include <stdlib.h>
 
 #ifdef _WIN32
 #   define WINDOWS_COMPATIBILITY
@@ -16,25 +17,15 @@
 #endif
 
 typedef struct table_t Table;
-typedef struct csv_t Csv;
 
-typedef void(*map_fn)(CsvRecord *record, void *data);
+typedef struct csv_t {
+    // NOTE: in C we rarely will #include other .h files
+    //       to just get a pointer definition
+    Table *table;
 
-typedef struct csv_record_metadata_t {
-    /**
-     * What row the record is on
-     * NOTE: This doesn't include any skipped records nor headers
-     * 1 indexed.
-     **/
-    size_t row_no;
-
-    /**
-     * What column this record is on
-     * i.e. the count of ',' + 1 prior to this.
-     * 1 indexed.
-     **/
-    size_t col_no;
-} CsvRecordMetadata;
+    char **headers;
+    int headers_length;
+} Csv;
 
 typedef struct csv_record_col_t {
     /**
@@ -52,24 +43,25 @@ typedef struct csv_record_col_t {
         CSV_RECORD_NUMBER,
         CSV_RECORD_TEXT,
     } type;
+
+    int col;
 } CsvRecordCol;
 
 typedef struct csv_record_t {
     CsvRecordCol *cols;
-    CsvRecordMetadata metadata;
+    int row;
+    int num_cols;
 } CsvRecord;
+
+typedef void(*map_fn)(CsvRecord *record, void *data);
 
 /**
  * Find length of 0 terminated memory section.
  **/
-inline size_t memlen(const void* const *base) {
-    void **cur;
+inline int memlen(const void* const *base) {
+    const void * const *cur;
     for (cur = base; *cur != NULL; cur++) {}
     return cur - base;
-}
-
-inline void clear_screen(void) {
-    system(CLEAR_SCREEN);
 }
 
 #endif // DEFS_H

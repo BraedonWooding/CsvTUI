@@ -10,28 +10,26 @@ typedef struct ll_t LL;
 
 struct ll_t {
     LL *next;
-    LL *prev;
     CsvRecord data;
 };
 
 struct table_t {
     LL *head;
     LL *tail;
-    size_t row_len;
+    int row_len;
 };
 
-CsvRecord *table_index(Table *table, size_t row) {
+CsvRecord *table_index(Table *table, int row) {
     LL *elem = table->head;
-    for (size_t i = 1; elem != NULL && i < row; elem = elem->next, i++) { }
+    for (int i = 1; elem != NULL && i < row; elem = elem->next, i++) { }
     return elem ? &elem->data : NULL;
 }
 
-CsvRecord *table_remove_row(Table *table, size_t row) {
-    return NULL;
+void table_remove_row(Table *table, int row) {
+
 }
 
-void table_insert_row(Table *table, size_t after, CsvRecord record) {
-    return NULL;
+void table_insert_row(Table *table, int after, CsvRecord record) {
 }
 
 Table *table_init(void) {

@@ -10,18 +10,18 @@
 /**
  * Index a given row
  **/
-CsvRecord *table_index(Table *table, size_t row);
+CsvRecord *table_index(Table *table, int row);
 
 /**
- * Remove a given row and return it.
+ * Remove a given row.
  **/
-CsvRecord *table_remove_row(Table *table, size_t row);
+void table_remove_row(Table *table, int row);
 
 /**
  * Insert a row after the given index.
  * NOTE: 'after' is '1' indexed (corresponds to row) so '0' will be always inserting prior to first row
  **/
-void table_insert_row(Table *table, size_t after, CsvRecord record);
+void table_insert_row(Table *table, int after, CsvRecord record);
 
 /**
  * Initialise the table.

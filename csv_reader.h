@@ -9,6 +9,8 @@
 #include <stdio.h> // for FILE
 #include <stdbool.h>
 
+#include "defs.h"
+
 #define READ_BUF_SIZE (1024)
 
 typedef struct csv_config_t {
@@ -25,9 +27,9 @@ typedef struct csv_config_t {
     } flags;
 
     /**
-     * 
+     * The headers.
      **/
-    const char*   const *headers;
+    char *headers;
 } CsvConfig;
 
 typedef struct csv_reader_t {
@@ -45,26 +47,14 @@ typedef struct csv_reader_t {
     char       *csv_headers;
 
     /**
-     * The line number of the reader
-     * not necessarily related to record.
-     **/
-    size_t      line_no;
-
-    /**
-     * The column number of the reader
-     * not necessarily related to record
-     **/
-    size_t      col_no;
-
-    /**
      * Total number of columns read.
      **/
-    size_t      col_count;
+    int      col_count;
 
     /**
      * Total number of rows read.
      **/
-    size_t      row_count;
+    int      row_count;
 
     /*
         The configuration for this csv reader.

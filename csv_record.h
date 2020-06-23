@@ -10,7 +10,7 @@
 /**
  * Returns all the csv headers.
  **/
-const char* const *csv_get_headers(const Csv *csv);
+char **const csv_get_headers(const Csv *csv);
 
 /**
  * Initialise a new csv object.
