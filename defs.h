@@ -64,4 +64,6 @@ inline int memlen(const void* const *base) {
     return cur - base;
 }
 
+int getch(void);
+
 #endif // DEFS_H
