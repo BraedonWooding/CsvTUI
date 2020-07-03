@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #ifdef _WIN32
 #   define WINDOWS_COMPATIBILITY
@@ -16,11 +17,17 @@
 #   define CLEAR_SCREEN "clear"
 #endif
 
+// NOTE: in C we rarely will #include other .h files
+//       to just get a pointer definition
 typedef struct table_t Table;
 
+typedef struct csv_selected_t {
+    int row;
+    int col;
+    bool modifying;
+} CsvSelected;
+
 typedef struct csv_t {
-    // NOTE: in C we rarely will #include other .h files
-    //       to just get a pointer definition
     Table *table;
 
     char **headers;

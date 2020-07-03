@@ -37,7 +37,7 @@ typedef struct csv_reader_t {
      * What read mode are we in?
      */
     union {
-        FILE        *file_buf;
+        FILE        *file;
         const char  *read_buf;
     } _read_mode;
 

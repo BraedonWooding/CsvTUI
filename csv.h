@@ -17,6 +17,6 @@ char **const csv_get_headers(const Csv *csv);
  **/
 Csv *csv_init(const char *headers);
 
-void csv_print(Csv *csv);
+void csv_print(Csv *csv, CsvSelected *selected);
 
 #endif // CSV_RECORD_H

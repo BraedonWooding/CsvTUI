@@ -62,28 +62,43 @@ Csv *csv_init(const char *headers) {
 }
 
 static void print_record(CsvRecord *record, void *data) {
-    text_set(SET_BOLD, FG_BLACK, BG_WHITE);
+    CsvSelected *selected = data;
+
+    text_set(SET_BOLD, selected->row == record->row ? FG_WHITE : FG_BLACK,
+             selected->row == record->row ? BG_BLACK : BG_WHITE);
     printf("% 3d", record->row);
     CLEAR_MODIFIERS();
 
-    text_set(SET_RESET, FG_WHITE, BG_BLACK);
     // each col is going to be black + white and have a length of 15
     for (CsvRecordCol *col = record->cols; col < record->cols + record->num_cols; col++) {
-
+        text_set(SET_RESET, selected->row == record->row && selected->col == col->col ? FG_BLACK : FG_WHITE,
+                selected->row == record->row && selected->col == col->col ? BG_WHITE : BG_BLACK);
+        switch (col->type) {
+            case CSV_RECORD_NUMBER: {
+                printf("% 15f", col->_number);
+                break;
+            }
+            case CSV_RECORD_TEXT: {
+                printf("%15s", col->_text);
+                break;
+            }
+        }
+        // printf("%15s", col->_text);
+        CLEAR_MODIFIERS();
     }
     printf("\n");
-    CLEAR_MODIFIERS();
 
     // TODO: Print more cols/rows?
     //       Think about the extra arg we aren't using.
 }
 
-void csv_print(Csv *csv) {
+void csv_print(Csv *csv, CsvSelected *selected) {
     system(CLEAR_SCREEN);
     // print out cols
-    text_set(SET_BOLD, FG_BLACK, BG_WHITE);
     // for the '0' col
+    text_set(SET_BOLD, FG_BLACK, BG_WHITE);
     printf("   ");
+    CLEAR_MODIFIERS();
 
     for (char **headers = csv->headers; *headers; headers++) {
         int header_len = strlen(*headers);
@@ -92,12 +107,16 @@ void csv_print(Csv *csv) {
             header_len = 15;
         }
 
+        text_set(SET_BOLD, selected->col == headers - csv->headers ? FG_WHITE : FG_BLACK, selected->col == headers - csv->headers ? BG_BLACK : BG_WHITE);
+
         // if we have it so it can't be even add more spaces on the left side
         for (int i = 0; i < (15 - header_len + 1) / 2; i++) putchar(' ');
         printf("%.*s", header_len, *headers);
         for (int i = 0; i < (15 - header_len) / 2; i++) putchar(' ');
+
+        CLEAR_MODIFIERS();
     }
 
     printf("\n");
-    table_apply(csv->table, print_record, NULL);
+    table_apply(csv->table, print_record, selected);
 }

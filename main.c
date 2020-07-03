@@ -11,6 +11,7 @@
 #include "csv_reader.h"
 #include "csv.h"
 #include "defs.h"
+#include "table.h"
 
 #define ERR(...) do { \
     fprintf(stderr, "[Error] " __VA_ARGS__); \
@@ -93,16 +94,53 @@ int main(int argc, char *argv[]) {
         ERR("Needs to provide atleast one of '-s' or '-f' for now");
     }
 
-    Csv *csv = read_out_csv(&reader, !!headers);
+    Csv *csv = read_out_csv(&reader, !headers);
     if (!csv) ERR("Failure to read CSV %s", reader.err_buf);
 
     // print it out
-    csv_print(csv);
+    char buf[1024];
+    CsvSelected selected = { .col = 1, .row = 1 };
+    csv_print(csv, &selected);
 
-    // TODO: TUI Mode
-    // for (;;) {
-
-    // }
+    for (int input = getch(); input != EOF; input = getch()) {
+        // esc[A
+        if (input == '\033') { // esc
+            getch();
+            switch (getch()) {
+                case 'A': {
+                    // up
+                    selected.row--;
+                    if (selected.row < 0) selected.row = 0;
+                    break;
+                }
+                case 'B': {
+                    // down
+                    selected.row++;
+                    break;
+                }
+                case 'C': {
+                    // right
+                    selected.col++;
+                    if (selected.col >= csv->headers_length) selected.col = csv->headers_length;
+                    break;
+                }
+                case 'D': {
+                    // left
+                    selected.col--;
+                    if (selected.col < 0) selected.col = 0;
+                    break;
+                }
+            }
+        } else if (input == 'e') {
+            printf("> Enter new value: ");
+            fgets(buf, 1024, stdin);
+            CsvRecord *rec = table_index(csv->table, selected.row);
+            if (buf[strlen(buf) - 1] == '\n') buf[strlen(buf) - 1] = '\0';
+            rec->cols[selected.col]._text = strdup(buf);
+            rec->cols[selected.col].type = CSV_RECORD_TEXT;
+        }
+        csv_print(csv, &selected);
+    }
 
     return 0;
 }
